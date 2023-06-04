@@ -50,6 +50,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////@end includes
 
 #include "dlg_jx08_memory_converter.h"
+#include "aboutjxconversion.h"
 
 ////@begin XPM images
 ////@end XPM images
@@ -72,12 +73,11 @@ BEGIN_EVENT_TABLE( dlgJX08MemoryConverter, wxDialog )
     EVT_CHOICE( XRCID("ID_JX_GROUP"), dlgJX08MemoryConverter::OnJxGroupSelected )
     EVT_CHOICE( XRCID("ID_JX_BANK"), dlgJX08MemoryConverter::OnJxBankSelected )
     EVT_CHOICE( XRCID("ID_JX_NUMBER"), dlgJX08MemoryConverter::OnJxNumberSelected )
-    EVT_BUTTON( XRCID("ID_JX_TO_MIDI"), dlgJX08MemoryConverter::OnJxToMidiClick )
     EVT_SPINCTRL( XRCID("ID_LSB"), dlgJX08MemoryConverter::OnLsbUpdated )
     EVT_SPINCTRL( XRCID("ID_MSB"), dlgJX08MemoryConverter::OnMsbUpdated )
     EVT_SPINCTRL( XRCID("ID_PC"), dlgJX08MemoryConverter::OnPcUpdated )
-    EVT_BUTTON( XRCID("ID_MIDI_TO_JX"), dlgJX08MemoryConverter::OnMidiToJxClick )
     EVT_CHECKBOX( XRCID("ID_DAW_START_ONE"), dlgJX08MemoryConverter::OnDawStartOneClick )
+    EVT_BUTTON( XRCID("ID_ABOUT_JX_CONV"), dlgJX08MemoryConverter::OnAboutJxConvClick )
 ////@end dlgJX08MemoryConverter event table entries
 
 END_EVENT_TABLE()
@@ -137,13 +137,13 @@ dlgJX08MemoryConverter::~dlgJX08MemoryConverter()
 void dlgJX08MemoryConverter::Init()
 {
 ////@begin dlgJX08MemoryConverter member initialisation
+    m_daw_start_one = false;
     m_jx_bank = wxT("1");
     m_jx_group = wxT("A");
     m_jx_number = wxT("1");
     m_midi_lsb = 0;
     m_midi_msb = 0;
     m_midi_pc = 0;
-    m_daw_start_one = false;
     m_midi_pc_ctl = NULL;
 ////@end dlgJX08MemoryConverter member initialisation
 }
@@ -222,20 +222,13 @@ wxIcon dlgJX08MemoryConverter::GetIconResource( const wxString& name )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_JX_TO_MIDI
  */
 
-void dlgJX08MemoryConverter::OnJxToMidiClick( wxCommandEvent& event )
+void dlgJX08MemoryConverter::OnAboutJxConvClick( wxCommandEvent& event )
 {
-    UpdateMidi();
+    AboutJxConversion *dlg = new AboutJxConversion(this);
+    dlg->ShowModal();
+    dlg->Destroy();
 }
 
-
-/*
- * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_MIDI_TO_JX
- */
-
-void dlgJX08MemoryConverter::OnMidiToJxClick( wxCommandEvent& event )
-{
-    UpdateJx08();
-}
 
 void dlgJX08MemoryConverter::UpdateMidi()
 {

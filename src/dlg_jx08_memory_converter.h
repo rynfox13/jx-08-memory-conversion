@@ -111,9 +111,6 @@ protected:
     /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_JX_NUMBER
     void OnJxNumberSelected( wxCommandEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_JX_TO_MIDI
-    void OnJxToMidiClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_LSB
     void OnLsbUpdated( wxSpinEvent& event );
 
@@ -123,16 +120,19 @@ protected:
     /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_PC
     void OnPcUpdated( wxSpinEvent& event );
 
-    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_MIDI_TO_JX
-    void OnMidiToJxClick( wxCommandEvent& event );
-
     /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_DAW_START_ONE
     void OnDawStartOneClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_ABOUT_JX_CONV
+    void OnAboutJxConvClick( wxCommandEvent& event );
 
 ////@end dlgJX08MemoryConverter event handler declarations
 
 public:
 ////@begin dlgJX08MemoryConverter member function declarations
+
+    bool GetDawStartOne() const { return m_daw_start_one ; }
+    void SetDawStartOne(bool value) { m_daw_start_one = value ; }
 
     wxString GetJxBank() const { return m_jx_bank ; }
     void SetJxBank(wxString value) { m_jx_bank = value ; }
@@ -152,9 +152,6 @@ public:
     int GetMidiPc() const { return m_midi_pc ; }
     void SetMidiPc(int value) { m_midi_pc = value ; }
 
-    bool GetDawStartOne() const { return m_daw_start_one ; }
-    void SetDawStartOne(bool value) { m_daw_start_one = value ; }
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -172,13 +169,13 @@ protected:
 ////@begin dlgJX08MemoryConverter member variables
     wxSpinCtrl* m_midi_pc_ctl;
 protected:
+    bool m_daw_start_one; // The DAW starts at One
     wxString m_jx_bank; // The bank on the JX-08 or JD-08 for the preset. Possible values: 1-8
     wxString m_jx_group; // The memory group for the JX-08/JD-08
     wxString m_jx_number; // The preset number for the preset on the JX-08/JD-08. Possible values: 1-8
     int m_midi_lsb; // The LSB for the memory bank.
     int m_midi_msb; // The MSB of the memory bank
     int m_midi_pc; // The MIDI PC code for the preset
-    bool m_daw_start_one; // The DAW starts at One
 ////@end dlgJX08MemoryConverter member variables
 };
 
