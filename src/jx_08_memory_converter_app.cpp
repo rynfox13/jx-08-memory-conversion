@@ -55,6 +55,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ////@begin XPM images
 ////@end XPM images
 
+/**
+ * Initialize the C++-encoded XML resources.
+ *
+ * This function is generated from resources.xrc, which is generated via DialogBlocks.
+ */
+extern void InitXmlResource();
 
 /*
  * Application instance implementation
@@ -115,8 +121,7 @@ bool Jx08MemoryConverterApp::OnInit()
 	// to make permanent changes to the code.
 
 	wxXmlResource::Get()->InitAllHandlers();
-	wxFileSystem::AddHandler(new wxZipFSHandler);
-	wxXmlResource::Get()->Load(wxT("resources.xrc"));
+    InitXmlResource();
 
 #if wxUSE_XPM
 	wxImage::AddHandler(new wxXPMHandler);

@@ -2,12 +2,223 @@
 <resource version="2.3.0.1" xmlns="http://www.wxwidgets.org/wxxrc">
     <object class="wxDialog" name="ID_DLGJX08MEMORYCONVERTER" subclass="dlgJX08MemoryConverter">
         <style>wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL</style>
-        <exstyle>wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS</exstyle>
+        <exstyle>wxWS_EX_BLOCK_EVENTS</exstyle>
         <size>400,300</size>
         <title>JX-08 Memory Converter</title>
         <centered>1</centered>
-        <object class="wxBoxSizer">
-            <orient>wxVERTICAL</orient>
+        <object class="wxFlexGridSizer">
+            <cols>1</cols>
+            <rows>0</rows>
+            <vgap>0</vgap>
+            <hgap>0</hgap>
+            <growablecols>0</growablecols>
+            <growablerows>0</growablerows>
+            <object class="sizeritem">
+                <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+                <border>5</border>
+                <object class="wxFlexGridSizer">
+                    <cols>2</cols>
+                    <rows>0</rows>
+                    <vgap>0</vgap>
+                    <hgap>0</hgap>
+                    <growablecols>1</growablecols>
+                    <growablerows>0,1</growablerows>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>JX-08 Memory Bank:</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW</flag>
+                        <border>5</border>
+                        <object class="wxFlexGridSizer">
+                            <cols>2</cols>
+                            <rows>0</rows>
+                            <vgap>0</vgap>
+                            <hgap>0</hgap>
+                            <growablecols>0</growablecols>
+                            <growablerows>0</growablerows>
+                            <object class="sizeritem">
+                                <flag>wxGROW</flag>
+                                <border>5</border>
+                                <object class="wxFlexGridSizer">
+                                    <cols>3</cols>
+                                    <rows>0</rows>
+                                    <vgap>0</vgap>
+                                    <hgap>0</hgap>
+                                    <object class="sizeritem">
+                                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxChoice" name="ID_JX_GROUP">
+                                            <content>
+                                                <item>A</item>
+                                                <item>B</item>
+                                                <item>C</item>
+                                                <item>D</item>
+                                            </content>
+                                        </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxChoice" name="ID_JX_BANK">
+                                            <content>
+                                                <item>1</item>
+                                                <item>2</item>
+                                                <item>3</item>
+                                                <item>4</item>
+                                                <item>5</item>
+                                                <item>6</item>
+                                                <item>7</item>
+                                                <item>8</item>
+                                            </content>
+                                        </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                        <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxChoice" name="ID_JX_NUMBER">
+                                            <content>
+                                                <item>1</item>
+                                                <item>2</item>
+                                                <item>3</item>
+                                                <item>4</item>
+                                                <item>5</item>
+                                                <item>6</item>
+                                                <item>7</item>
+                                                <item>8</item>
+                                            </content>
+                                        </object>
+                                    </object>
+                                </object>
+                            </object>
+                            <object class="sizeritem">
+                                <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                <border>5</border>
+                                <object class="wxButton" name="ID_JX_TO_MIDI">
+                                    <label>To &amp;Midi</label>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxALIGN_LEFT|wxALIGN_TOP|wxALL</flag>
+                        <border>5</border>
+                        <object class="wxStaticText" name="wxID_STATIC">
+                            <label>MIDI Address</label>
+                        </object>
+                    </object>
+                    <object class="sizeritem">
+                        <flag>wxGROW</flag>
+                        <border>5</border>
+                        <object class="wxFlexGridSizer">
+                            <cols>2</cols>
+                            <rows>0</rows>
+                            <vgap>0</vgap>
+                            <hgap>0</hgap>
+                            <growablecols>0</growablecols>
+                            <growablerows>0</growablerows>
+                            <object class="sizeritem">
+                                <flag>wxGROW</flag>
+                                <border>5</border>
+                                <object class="wxFlexGridSizer">
+                                    <cols>2</cols>
+                                    <rows>0</rows>
+                                    <vgap>0</vgap>
+                                    <hgap>0</hgap>
+                                    <growablecols>1</growablecols>
+                                    <growablerows>0,1,2</growablerows>
+                                    <object class="sizeritem">
+                                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxStaticText" name="wxID_STATIC">
+                                            <label>LSB</label>
+                                        </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxSpinCtrl" name="ID_LSB">
+                                            <style>wxSP_ARROW_KEYS</style>
+                                            <value>0</value>
+                                            <min>0</min>
+                                            <max>0</max>
+                                        </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxStaticText" name="wxID_STATIC">
+                                            <label>MSB</label>
+                                        </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxSpinCtrl" name="ID_MSB">
+                                            <style>wxSP_ARROW_KEYS</style>
+                                            <value>0</value>
+                                            <min>0</min>
+                                            <max>1</max>
+                                        </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                        <flag>wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxStaticText" name="wxID_STATIC">
+                                            <label>PC</label>
+                                        </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                        <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                                        <border>5</border>
+                                        <object class="wxSpinCtrl" name="ID_PC">
+                                            <style>wxSP_ARROW_KEYS</style>
+                                            <value>0</value>
+                                            <min>0</min>
+                                            <max>127</max>
+                                        </object>
+                                    </object>
+                                </object>
+                            </object>
+                            <object class="sizeritem">
+                                <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_TOP|wxALL</flag>
+                                <border>5</border>
+                                <object class="wxButton" name="ID_MIDI_TO_JX">
+                                    <label>To JX</label>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                <border>5</border>
+                <object class="wxCheckBox" name="ID_DAW_START_ONE">
+                    <label>My DAW sends presets starting at "1" not "0"</label>
+                    <checked>0</checked>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALIGN_CENTER_VERTICAL|wxALL</flag>
+                <border>5</border>
+                <object class="wxStaticLine" name="wxID_STATIC">
+                    <style>wxLI_HORIZONTAL</style>
+                </object>
+            </object>
+            <object class="sizeritem">
+                <flag>wxGROW|wxALL</flag>
+                <border>5</border>
+                <object class="wxHtmlWindow" name="ID_HTMLWINDOW">
+                    <size>200,150</size>
+                    <style>wxHW_SCROLLBAR_AUTO|wxSUNKEN_BORDER|wxHSCROLL|wxVSCROLL</style>
+                    <htmlcode>&lt;h3&gt;Note for certain DAWs&lt;/h3&gt;
+&lt;p&gt;Some DAWs, such as FL Studio, use presets starting with 1, where Program Change starts with 0. If you find your DAW won't let you enter "0" for the External MIDI preset, check the box above.&lt;/p&gt;</htmlcode>
+                </object>
+            </object>
         </object>
     </object>
 </resource>
