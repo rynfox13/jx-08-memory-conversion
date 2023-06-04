@@ -45,6 +45,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ////@begin includes
 #include "wx/xrc/xmlres.h"
+#include "wx/valgen.h"
+#include "wx/spinctrl.h"
+#include "wx/statline.h"
+#include "wx/html/htmlwin.h"
 ////@end includes
 
 /*!
@@ -52,6 +56,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 ////@begin forward declarations
+class wxSpinCtrl;
 ////@end forward declarations
 
 /*!
@@ -94,10 +99,62 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
+protected:
 ////@begin dlgJX08MemoryConverter event handler declarations
+
+    /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_JX_GROUP
+    void OnJxGroupSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_JX_BANK
+    void OnJxBankSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_JX_NUMBER
+    void OnJxNumberSelected( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_JX_TO_MIDI
+    void OnJxToMidiClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_LSB
+    void OnLsbUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_MSB
+    void OnMsbUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_PC
+    void OnPcUpdated( wxSpinEvent& event );
+
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_MIDI_TO_JX
+    void OnMidiToJxClick( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_DAW_START_ONE
+    void OnDawStartOneClick( wxCommandEvent& event );
+
 ////@end dlgJX08MemoryConverter event handler declarations
 
+public:
 ////@begin dlgJX08MemoryConverter member function declarations
+
+    wxString GetJxBank() const { return m_jx_bank ; }
+    void SetJxBank(wxString value) { m_jx_bank = value ; }
+
+    wxString GetJxGroup() const { return m_jx_group ; }
+    void SetJxGroup(wxString value) { m_jx_group = value ; }
+
+    wxString GetJxNumber() const { return m_jx_number ; }
+    void SetJxNumber(wxString value) { m_jx_number = value ; }
+
+    int GetMidiLsb() const { return m_midi_lsb ; }
+    void SetMidiLsb(int value) { m_midi_lsb = value ; }
+
+    int GetMidiMsb() const { return m_midi_msb ; }
+    void SetMidiMsb(int value) { m_midi_msb = value ; }
+
+    int GetMidiPc() const { return m_midi_pc ; }
+    void SetMidiPc(int value) { m_midi_pc = value ; }
+
+    bool GetDawStartOne() const { return m_daw_start_one ; }
+    void SetDawStartOne(bool value) { m_daw_start_one = value ; }
+
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -108,7 +165,20 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
+protected:
+    void UpdateMidi();
+    void UpdateJx08();
+
 ////@begin dlgJX08MemoryConverter member variables
+    wxSpinCtrl* m_midi_pc_ctl;
+protected:
+    wxString m_jx_bank; // The bank on the JX-08 or JD-08 for the preset. Possible values: 1-8
+    wxString m_jx_group; // The memory group for the JX-08/JD-08
+    wxString m_jx_number; // The preset number for the preset on the JX-08/JD-08. Possible values: 1-8
+    int m_midi_lsb; // The LSB for the memory bank.
+    int m_midi_msb; // The MSB of the memory bank
+    int m_midi_pc; // The MIDI PC code for the preset
+    bool m_daw_start_one; // The DAW starts at One
 ////@end dlgJX08MemoryConverter member variables
 };
 

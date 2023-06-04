@@ -52,7 +52,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "dlg_jx08_memory_converter.h"
 
 ////@begin XPM images
-
 ////@end XPM images
 
 
@@ -70,6 +69,15 @@ IMPLEMENT_DYNAMIC_CLASS( dlgJX08MemoryConverter, wxDialog )
 BEGIN_EVENT_TABLE( dlgJX08MemoryConverter, wxDialog )
 
 ////@begin dlgJX08MemoryConverter event table entries
+    EVT_CHOICE( XRCID("ID_JX_GROUP"), dlgJX08MemoryConverter::OnJxGroupSelected )
+    EVT_CHOICE( XRCID("ID_JX_BANK"), dlgJX08MemoryConverter::OnJxBankSelected )
+    EVT_CHOICE( XRCID("ID_JX_NUMBER"), dlgJX08MemoryConverter::OnJxNumberSelected )
+    EVT_BUTTON( XRCID("ID_JX_TO_MIDI"), dlgJX08MemoryConverter::OnJxToMidiClick )
+    EVT_SPINCTRL( XRCID("ID_LSB"), dlgJX08MemoryConverter::OnLsbUpdated )
+    EVT_SPINCTRL( XRCID("ID_MSB"), dlgJX08MemoryConverter::OnMsbUpdated )
+    EVT_SPINCTRL( XRCID("ID_PC"), dlgJX08MemoryConverter::OnPcUpdated )
+    EVT_BUTTON( XRCID("ID_MIDI_TO_JX"), dlgJX08MemoryConverter::OnMidiToJxClick )
+    EVT_CHECKBOX( XRCID("ID_DAW_START_ONE"), dlgJX08MemoryConverter::OnDawStartOneClick )
 ////@end dlgJX08MemoryConverter event table entries
 
 END_EVENT_TABLE()
@@ -98,7 +106,7 @@ dlgJX08MemoryConverter::dlgJX08MemoryConverter( wxWindow* parent, wxWindowID id,
 bool dlgJX08MemoryConverter::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
 ////@begin dlgJX08MemoryConverter creation
-    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY|wxWS_EX_BLOCK_EVENTS);
+    SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
     SetParent(parent);
     CreateControls();
     if (GetSizer())
@@ -129,6 +137,14 @@ dlgJX08MemoryConverter::~dlgJX08MemoryConverter()
 void dlgJX08MemoryConverter::Init()
 {
 ////@begin dlgJX08MemoryConverter member initialisation
+    m_jx_bank = wxT("1");
+    m_jx_group = wxT("A");
+    m_jx_number = wxT("1");
+    m_midi_lsb = 0;
+    m_midi_msb = 0;
+    m_midi_pc = 0;
+    m_daw_start_one = false;
+    m_midi_pc_ctl = NULL;
 ////@end dlgJX08MemoryConverter member initialisation
 }
 
@@ -142,6 +158,22 @@ void dlgJX08MemoryConverter::CreateControls()
 ////@begin dlgJX08MemoryConverter content construction
     if (!wxXmlResource::Get()->LoadDialog(this, GetParent(), wxT("ID_DLGJX08MEMORYCONVERTER")))
         wxLogError(wxT("Missing wxXmlResource::Get()->Load() in OnInit()?"));
+    m_midi_pc_ctl = XRCCTRL(*this, "ID_PC", wxSpinCtrl);
+    // Set validators
+    if (FindWindow(XRCID("ID_JX_GROUP")))
+        FindWindow(XRCID("ID_JX_GROUP"))->SetValidator( wxGenericValidator(& m_jx_group) );
+    if (FindWindow(XRCID("ID_JX_BANK")))
+        FindWindow(XRCID("ID_JX_BANK"))->SetValidator( wxGenericValidator(& m_jx_bank) );
+    if (FindWindow(XRCID("ID_JX_NUMBER")))
+        FindWindow(XRCID("ID_JX_NUMBER"))->SetValidator( wxGenericValidator(& m_jx_number) );
+    if (FindWindow(XRCID("ID_LSB")))
+        FindWindow(XRCID("ID_LSB"))->SetValidator( wxGenericValidator(& m_midi_lsb) );
+    if (FindWindow(XRCID("ID_MSB")))
+        FindWindow(XRCID("ID_MSB"))->SetValidator( wxGenericValidator(& m_midi_msb) );
+    if (FindWindow(XRCID("ID_PC")))
+        FindWindow(XRCID("ID_PC"))->SetValidator( wxGenericValidator(& m_midi_pc) );
+    if (FindWindow(XRCID("ID_DAW_START_ONE")))
+        FindWindow(XRCID("ID_DAW_START_ONE"))->SetValidator( wxGenericValidator(& m_daw_start_one) );
 ////@end dlgJX08MemoryConverter content construction
 
     // Create custom windows not generated automatically here.
@@ -184,3 +216,162 @@ wxIcon dlgJX08MemoryConverter::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end dlgJX08MemoryConverter icon retrieval
 }
+
+
+/*
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_JX_TO_MIDI
+ */
+
+void dlgJX08MemoryConverter::OnJxToMidiClick( wxCommandEvent& event )
+{
+    UpdateMidi();
+}
+
+
+/*
+ * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_MIDI_TO_JX
+ */
+
+void dlgJX08MemoryConverter::OnMidiToJxClick( wxCommandEvent& event )
+{
+    UpdateJx08();
+}
+
+void dlgJX08MemoryConverter::UpdateMidi()
+{
+    if (Validate() && TransferDataFromWindow()) {
+        int pc = 0;
+
+        m_midi_pc = (wxAtoi(m_jx_bank) - 1) * 8 + (wxAtoi(m_jx_number) - 1);
+        if(m_jx_group == wxT("B") || m_jx_group == wxT("D"))
+            m_midi_pc += 64;
+
+        if(m_daw_start_one) {
+            m_midi_pc += 1;
+        }
+
+        if(m_jx_group == wxT("C") || m_jx_group == wxT("D"))
+            m_midi_msb = 1;
+        else
+            m_midi_msb = 0;
+
+        TransferDataToWindow();
+    }
+}
+
+void dlgJX08MemoryConverter::UpdateJx08()
+{
+    if (Validate() && TransferDataFromWindow()) {
+        int pc = m_midi_pc;
+
+        if(m_daw_start_one) {
+            pc -= 1;
+        }
+
+        if(m_midi_msb > 1 || m_midi_lsb > 0) {
+            wxMessageBox(wxT("The JX-08 and JD-08 do not support more than 256 memories.\nPlease set LSB to 0 and MSB to 0 or 1."),
+                         wxT("Conversion Error"),
+                         wxOK | wxICON_ERROR,
+                         this);
+            return;
+        }
+
+        if(pc >= 64 && m_midi_msb == 0) {
+            m_jx_group = wxT("B");
+            pc -= 64;
+        } else if(pc >= 64 && m_midi_msb == 1) {
+            m_jx_group = wxT("D");
+            pc -= 64;
+        } else if(pc < 64 && m_midi_msb == 0) {
+            m_jx_group = wxT("A");
+        } else if(pc < 64 && m_midi_msb == 1) {
+            m_jx_group = wxT("C");
+        }
+
+        wxString out = wxString::Format(wxT("%02o"), pc);
+        int bank = wxAtoi(out.Left(1)) + 1;
+        int number = wxAtoi(out.Right(1)) + 1;
+        m_jx_bank = wxString::Format(wxT("%d"), bank);
+        m_jx_number = wxString::Format(wxT("%d"), number);
+        TransferDataToWindow();
+    }
+}
+
+/*
+ * wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_DAW_START_ZERO
+ */
+
+void dlgJX08MemoryConverter::OnDawStartOneClick( wxCommandEvent& event )
+{
+    if (Validate() && TransferDataFromWindow()) {
+        if(m_daw_start_one) {
+            m_midi_pc_ctl->SetRange(1, 128);
+            m_midi_pc += 1;
+        } else {
+            m_midi_pc_ctl->SetRange(0, 127);
+            m_midi_pc -= 1;
+        }
+        TransferDataToWindow();
+    }
+}
+
+
+/*
+ * wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_JX_GROUP
+ */
+
+void dlgJX08MemoryConverter::OnJxGroupSelected( wxCommandEvent& event )
+{
+    UpdateMidi();
+}
+
+
+/*
+ * wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_JX_BANK
+ */
+
+void dlgJX08MemoryConverter::OnJxBankSelected( wxCommandEvent& event )
+{
+    UpdateMidi();
+}
+
+
+/*
+ * wxEVT_COMMAND_CHOICE_SELECTED event handler for ID_JX_NUMBER
+ */
+
+void dlgJX08MemoryConverter::OnJxNumberSelected( wxCommandEvent& event )
+{
+    UpdateMidi();
+}
+
+
+/*
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_LSB
+ */
+
+void dlgJX08MemoryConverter::OnLsbUpdated( wxSpinEvent& event )
+{
+    UpdateJx08();
+}
+
+
+/*
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_MSB
+ */
+
+void dlgJX08MemoryConverter::OnMsbUpdated( wxSpinEvent& event )
+{
+    UpdateJx08();
+}
+
+
+/*
+ * wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_PC
+ */
+
+void dlgJX08MemoryConverter::OnPcUpdated( wxSpinEvent& event )
+{
+    UpdateJx08();
+}
+
