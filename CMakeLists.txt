@@ -3,6 +3,8 @@ project(jx-08_memory_conversion LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 set(wxBUILD_SHARED OFF)
 
 # wxWidgets GUI library
@@ -36,6 +38,9 @@ if (${CMAKE_HOST_APPLE})
     set(APP_NAME JX-08-Conversion)
 
     add_executable(${APP_NAME} MACOSX_BUNDLE ${cpp_sources})
+elseif(${CMAKE_HOST_WIN32})
+    set(APP_NAME jx_08_conversion)
+    add_executable(${APP_NAME} WIN32 ${cpp_sources})
 else()
     set(APP_NAME jx_08_conversion)
     add_executable(${APP_NAME} ${cpp_sources})
@@ -44,15 +49,22 @@ endif()
 target_sources(${APP_NAME} PRIVATE ${resource_cpp} ${CMAKE_CURRENT_SOURCE_DIR}/src/jx-08_mem_conv.rc)
 target_link_libraries(${APP_NAME} wx::xrc wx::core wx::base)
 
+set(CPACK_NSIS_PACKAGE_NAME "JX-08 Conversion Tool")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_PACKAGE_NAME "${APP_NAME}")
+set(CPACK_PACKAGE_VENDOR "rynfox13")
+
+set (CPACK_PACKAGE_EXECUTABLES "${APP_NAME}" "JX-08 Conversion" )
+
 if(${CMAKE_HOST_APPLE})
+    # Note Mac specific extension .app
+    set(APPS "\${CMAKE_INSTALL_PREFIX}/${APP_NAME}.app")
+
     # Destination paths below are relative to ${CMAKE_INSTALL_PREFIX}
     install(TARGETS ${APP_NAME}
             BUNDLE DESTINATION . COMPONENT Runtime
             RUNTIME DESTINATION bin COMPONENT Runtime
             )
-
-    # Note Mac specific extension .app
-    set(APPS "\${CMAKE_INSTALL_PREFIX}/${APP_NAME}.app")
 
     # Directories to look for dependencies
     set(DIRS ${CMAKE_BINARY_DIR})
@@ -61,5 +73,8 @@ if(${CMAKE_HOST_APPLE})
     fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")")
 
     set(CPACK_GENERATOR "DRAGNDROP")
-    include(CPack)
+else()
+    # Destination paths below are relative to ${CMAKE_INSTALL_PREFIX}
+    install(TARGETS ${APP_NAME} RUNTIME DESTINATION bin COMPONENT Runtime)
 endif()
+include(CPack)
