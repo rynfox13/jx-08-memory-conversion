@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(jx-08_memory_conversion)
+project(jx-08_memory_conversion LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -31,6 +31,35 @@ add_custom_command(
         COMMENT "Compiling XRC resources"
 )
 
-add_executable(jx-08_memory_conversion ${cpp_sources})
-target_sources(jx-08_memory_conversion PRIVATE ${resource_cpp} ${CMAKE_CURRENT_SOURCE_DIR}/src/jx-08_mem_conv.rc)
-target_link_libraries(jx-08_memory_conversion wx::xrc wx::core wx::base)
+
+if (${CMAKE_HOST_APPLE})
+    set(APP_NAME JX-08-Conversion)
+
+    add_executable(${APP_NAME} MACOSX_BUNDLE ${cpp_sources})
+else()
+    set(APP_NAME jx_08_conversion)
+    add_executable(${APP_NAME} ${cpp_sources})
+endif()
+
+target_sources(${APP_NAME} PRIVATE ${resource_cpp} ${CMAKE_CURRENT_SOURCE_DIR}/src/jx-08_mem_conv.rc)
+target_link_libraries(${APP_NAME} wx::xrc wx::core wx::base)
+
+if(${CMAKE_HOST_APPLE})
+    # Destination paths below are relative to ${CMAKE_INSTALL_PREFIX}
+    install(TARGETS ${APP_NAME}
+            BUNDLE DESTINATION . COMPONENT Runtime
+            RUNTIME DESTINATION bin COMPONENT Runtime
+            )
+
+    # Note Mac specific extension .app
+    set(APPS "\${CMAKE_INSTALL_PREFIX}/${APP_NAME}.app")
+
+    # Directories to look for dependencies
+    set(DIRS ${CMAKE_BINARY_DIR})
+
+    install(CODE "include(BundleUtilities)
+    fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")")
+
+    set(CPACK_GENERATOR "DRAGNDROP")
+    include(CPack)
+endif()
