@@ -63,6 +63,20 @@ set(CPACK_PACKAGE_NAME "${APP_NAME}")
 set(CPACK_PACKAGE_VENDOR "rynfox13")
 set(CPACK_PACKAGE_CONTACT "rynfox13@users.noreply.github.com")
 
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_IGNORE_FILES
+        \\.git/
+        \\.gitignore
+        \\.gitmodules
+        \\.idea/
+        \\.DS_Store
+        build/
+        cmake-build-debug/
+        ".*~$"
+        ".*\\.bak$"
+        )
+set(CPACK_VERBATIM_VARIABLES YES)
+
 set (CPACK_PACKAGE_EXECUTABLES "${APP_NAME}" "JX-08 Conversion" )
 
 if(${CMAKE_HOST_APPLE})
